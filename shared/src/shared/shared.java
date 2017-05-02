@@ -7,9 +7,9 @@ public class shared {
 
 	public static void main(String[] args) {
 		
-		MessageService s1 = new MessageService("localhost", 6806, 6805);
+		final MessageService s1 = new MessageService("localhost", 6806, 6805);
 		s1.initialize();
-		MessageService s2 = new MessageService("localhost", 6805, 6806);
+		final MessageService s2 = new MessageService("localhost", 6805, 6806);
 		s2.initialize();
 		
 		s1.send(new Message("start"));

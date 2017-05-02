@@ -1,10 +1,14 @@
 package behaviors;
 
 import client.RobotControlCenter;
-import lejos.robotics.subsumption.Behavior;
+import Arbitrator.Arbitrator.Behavior;
+import client.MoveController.Motor;
+import shared.Configuration;
 
 public class DriveForward implements Behavior {
 	private RobotControlCenter rcc;
+	private static final float DISTANCE = Configuration.ROBOT_ADJUSTING_DISTANCE;
+	private static final float FAIL_MARGIN = Configuration.ROBOT_ADJUSTING_FAIL_MARGIN;
 	
 	public DriveForward(RobotControlCenter rcc){
 		this.rcc = rcc;
@@ -12,19 +16,18 @@ public class DriveForward implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		
 		return true;
 	}
 
 	@Override
-	public void action() {
-		if(!rcc.isMoving())
-			rcc.forward();		
+	public void action() { 
+		if (!this.rcc.isMoving())
+			this.rcc.forward();
 	}
 
 	@Override
 	public void suppress() {
-		rcc.stop();		
+		System.out.println("supress Forward");		
 	}
 
 }

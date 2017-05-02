@@ -5,37 +5,66 @@ import lejos.robotics.chassis.Chassis;
 import lejos.robotics.chassis.Wheel;
 import lejos.robotics.chassis.WheeledChassis;
 import lejos.robotics.navigation.MovePilot;
+import shared.Configuration;
 
 public class MoveController {
 	
+	/**
+	 * Regulated Motors of the robot.
+	 */
 	private final RegulatedMotor leftMotor;
 	private final RegulatedMotor rightMotor;
+	
+	private Direction direction;
+	
+	/**
+	 * Enum for representing the motors.
+	 */
+	public enum Motor {
+		LEFT,
+		RIGHT
+	}
+	
+	public enum Direction {
+		LEFT,
+		RIGHT,
+		FORWARD,
+		BACKWARD
+	}
+	
+	/**
+	 * MovePilot to control the robot.
+	 */
 	private MovePilot movePilot;
 	
-	private static final int ROTATION_SPEED = 15;
-	private static final int LINEAR_SPEED = 60; 
-	
+	/**
+	 * Constructs an MoveController with the given motors.
+	 * @param leftMotor - Left motor.
+	 * @param rightMotor - Right motor.
+	 */
 	public MoveController(RegulatedMotor leftMotor, RegulatedMotor rightMotor) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 	
-		this.leftMotor.synchronizeWith(new RegulatedMotor[] { this.rightMotor });
-		this.leftMotor.resetTachoCount();
-		this.rightMotor.resetTachoCount();
 		
 		this.setupMovePilot();
 		this.setup();
 	}
 	
 	private void setup() {
-		this.setAngularSpeed(ROTATION_SPEED);
-		this.setLinearSpeed(LINEAR_SPEED);
+		
+		//Reset the left and right motor tacho count for more precise start.
+		this.leftMotor.resetTachoCount();
+		this.rightMotor.resetTachoCount();
+		
+		this.setAngularSpeed(Configuration.ROBOT_ADJUSTING_SPEED);
+		this.setLinearSpeed(Configuration.ROBOT_LINEAR_SPEED);
 	}
 	
 	private void setupMovePilot() {
 		//Move pilot config.
 		double wheelDiameter = MovePilot.WHEEL_SIZE_EV3;
-		double robotWidth = 12;
+		double robotWidth = 24;
 		Wheel wheelLeft = WheeledChassis.modelWheel(leftMotor, wheelDiameter).offset((-robotWidth) / 2);
 		Wheel wheelRight = WheeledChassis.modelWheel(rightMotor, wheelDiameter).offset(robotWidth / 2);
 		Chassis chassis = new WheeledChassis(new Wheel[] {wheelLeft, wheelRight}, WheeledChassis.TYPE_DIFFERENTIAL);
@@ -51,10 +80,8 @@ public class MoveController {
 	}
 	
 	public void forward() {
-		this.leftMotor.startSynchronization();
-		this.leftMotor.forward();
-		this.rightMotor.forward();
-		this.leftMotor.endSynchronization();
+		System.out.println("forwd method.");
+		this.movePilot.forward();
 	}
 	
 	public void forward(double distance) {
@@ -62,10 +89,7 @@ public class MoveController {
 	}
 	
 	public void backward() {
-		this.leftMotor.startSynchronization();
-		this.leftMotor.backward();
-		this.rightMotor.backward();
-		this.leftMotor.endSynchronization();
+		this.movePilot.backward();
 	}
 	
 	public void rotate(int angle) {
@@ -77,8 +101,6 @@ public class MoveController {
 	}
 	
 	public void setLinearSpeed(int speed) {
-		this.movePilot.setLinearSpeed(speed / 10);
-		this.leftMotor.setSpeed(speed);
-		this.rightMotor.setSpeed(speed);
+		this.movePilot.setLinearSpeed(speed);
 	}
 }

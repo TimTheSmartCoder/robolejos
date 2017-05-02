@@ -1,22 +1,28 @@
 package client;
 
-import behaviors.Detect;
+import Arbitrator.Arbitrator;
+import Arbitrator.Arbitrator.Behavior;
+import behaviors.AdjustLeftBehavior;
+import behaviors.AdjustRightBehavior;
 import behaviors.DriveForward;
 import behaviors.Right;
-import lejos.robotics.subsumption.Arbitrator;
-import lejos.robotics.subsumption.Behavior;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class client {
 
 	public static void main(String[] args) {
 		RobotControlCenter rcc = RobotControlCenter.getInstans();
-		
-		Behavior[] behaviorList = new Behavior[] {new DriveForward(rcc), new Detect(rcc), new Right(rcc)};
+		List<Behavior> behaviorList = new ArrayList<Behavior>();
+
+		behaviorList.add(new DriveForward(rcc));
+		behaviorList.add(new AdjustLeftBehavior(rcc));
 		
 		Arbitrator arb = new Arbitrator(behaviorList);
 		
-		arb.go();
-
+		//rcc.forward();
+		arb.run();
 	}
 
 }

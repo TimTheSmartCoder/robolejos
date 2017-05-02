@@ -1,5 +1,6 @@
 package client;
 
+import client.MoveController.Motor;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -144,6 +145,10 @@ private final MoveController moveController;
 	
 	public void setAngularSpeed(int speed) {
 		this.moveController.setAngularSpeed(speed);
+	}
+	
+	public void setLinearSpeed(int speed) {
+		this.moveController.setLinearSpeed(speed);
 	}
 	
 	public static RobotControlCenter getInstans(){
