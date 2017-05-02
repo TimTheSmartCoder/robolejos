@@ -1,11 +1,9 @@
 package client;
 
-import client.MoveController.Motor;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
-import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.RangeFinderAdapter;
@@ -34,8 +32,6 @@ private final Chassis chassis;
 
 private final RangeFinderAdapter rfa;
 
-private final MoveController moveController;
-
 	private RobotControlCenter(){		
 		
 		brick = (EV3) BrickFinder.getDefault();
@@ -57,98 +53,31 @@ private final MoveController moveController;
 		
 		chassis = new WheeledChassis(new Wheel[] {wheelLeft, wheelRight}, WheeledChassis.TYPE_DIFFERENTIAL);
 		
-		//pilot = new MovePilot(chassis);
+		pilot = new MovePilot(chassis);
 		
 		rfa = new RangeFinderAdapter(ultraSonic);
-		//pilot.setLinearSpeed(20);
-		//pilot.setAngularSpeed(20);
-		
-		this.moveController = new MoveController(leftMotor, rightMotor);
-	}
-	
-	
-	public void test() {
-		this.leftMotor.synchronizeWith(new RegulatedMotor[] { this.rightMotor });
-		this.leftMotor.setSpeed(100);
-		this.rightMotor.setSpeed(100);
-		this.leftMotor.startSynchronization();
-		this.leftMotor.forward();
-		this.rightMotor.forward();
-		this.leftMotor.endSynchronization();
-	}
-	
-	public enum Direction {
-		LEFT,
-		RIGHT,
-		INFORNT,
-		BEHIND
-	}
-	
-	private static final int LEFT_ROTATION = -180;
-	private static final int RIGHT_ROTATION = 0;
-	private static final int INFRONT_ROTATION = -90;
-	private static final int BEHIND_ROTATION = 90;
-	
-	public float getUltraSonicSample() {
-		return this.rfa.getRange();
-	}
-	
-	public boolean isObject(Direction direction, float distance) {
-		
-		int rotation = getDirectionAngle(direction);
-		
-		if (rotation == 0)
-			this.smallMotor.rotate(rotation);
-		
-		boolean result = this.rfa.getRange() <= distance;
-		
-		if (rotation == 0)
-			this.smallMotor.rotate(-rotation);
-		
-		return result;
-	}
-	
-	private int getDirectionAngle(Direction direction) {
-		switch (direction) {
-		case LEFT:
-			return LEFT_ROTATION;
-		case RIGHT:
-			return RIGHT_ROTATION;
-		case BEHIND:
-			return BEHIND_ROTATION;
-		case INFORNT:
-			return INFRONT_ROTATION;
-		default:
-			return 0;
-		}
+		pilot.setLinearSpeed(20);
+		pilot.setAngularSpeed(20);
 	}
 	
 	public void rotate(int angle) {
-		this.moveController.rotate(angle);
+		this.pilot.rotate(angle);
 	}
 	
 	public void forward(){
-		this.moveController.forward();
+		this.pilot.forward();
 	}
 	
 	public void forward(double distance) {
-		this.moveController.forward(distance);
+		this.pilot.travel(distance);
 	}
 	
 	public void stop(){
-		this.moveController.stop();
+		this.pilot.stop();
 	}
 	
 	public boolean isMoving(){
-		return this.moveController.isMoving();
-	}
-	
-	public void setAngularSpeed(int speed) {
-		this.moveController.setAngularSpeed(speed);
-	}
-	
-	public void setLinearSpeed(int speed) {
-		this.moveController.setLinearSpeed(speed);
+		return this.pilot.isMoving();
 	}
 	
 	public static RobotControlCenter getInstans(){

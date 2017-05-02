@@ -1,4 +1,4 @@
-package shared;
+package messageservice;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -102,6 +102,7 @@ public class MessageService {
 						serverSocket = new ServerSocket(_port);
 						while(!serverSocket.isClosed()) {
 							Socket socket = serverSocket.accept();
+							System.out.println("Connection");
 							ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 							Object object = null;
 							try {
