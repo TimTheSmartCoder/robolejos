@@ -24,17 +24,23 @@ public class MessageService {
 			this._host = host;
 		}
 		
-		public void send(Object object) {
-			try {
-				Socket socket = this.createSocket();
-				ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-				objectOutputStream.writeObject(object);
-				objectOutputStream.flush();
-				socket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		public void send(final Object object) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+						Socket socket = new Socket(_host, _port);
+						ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+						objectOutputStream.writeObject(object);
+						objectOutputStream.flush();
+						socket.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}).start();
 		}
 		
 		public void send(List<Object> objects) {

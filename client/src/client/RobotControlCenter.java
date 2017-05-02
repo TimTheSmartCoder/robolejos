@@ -64,12 +64,20 @@ private final RangeFinderAdapter rfa;
 		this.pilot.rotate(angle);
 	}
 	
+	public void rotate(int angle, boolean immediateReturn) {
+		this.pilot.rotate(angle, immediateReturn);
+	}
+	
 	public void forward(){
 		this.pilot.forward();
 	}
 	
 	public void forward(double distance) {
 		this.pilot.travel(distance);
+	}
+	
+	public void backward(){
+		this.pilot.backward();
 	}
 	
 	public void stop(){
