@@ -7,6 +7,8 @@ import behaviors.IdleBehavior;
 import behaviors.LeftBehavior;
 import behaviors.RightBehavior;
 import behaviors.StopBehavior;
+import behaviors.TurnHeadLeftBehavior;
+import behaviors.TurnHeadRightBehavior;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 import messageservice.MessageService;
@@ -25,7 +27,9 @@ public class client {
 				new LeftBehavior(rcc, messageService),
 				new BackwardsBehavior(rcc, messageService),
 				new StopBehavior(rcc, messageService),
-				new CantMoveBehavior(rcc, messageService)
+				new CantMoveBehavior(rcc, messageService),
+				new TurnHeadLeftBehavior(rcc, messageService),
+				new TurnHeadRightBehavior(rcc, messageService)
 		});
 		
 		arbitrator.go();
