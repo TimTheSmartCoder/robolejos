@@ -127,7 +127,8 @@ public class MessageService {
 							Message message = new Message("", null);
 							try {
 								try {
-									while(!socket.isClosed() && (message.command = (String)objectInputStream.readObject()) != null && (message.value = objectInputStream.readObject()) != null) {
+									while(!socket.isClosed() && (message.command = (String)objectInputStream.readObject()) != null) {
+										message.value = objectInputStream.readObject();
 										_messageQueue.offer(message);
 									}
 								} catch (EOFException e) {

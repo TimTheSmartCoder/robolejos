@@ -94,5 +94,9 @@ private final RangeFinderAdapter rfa;
 		}
 		return instant;
 	}
+	
+	public float getDistance(){
+		return this.rfa.getRange();
+	}
 
 }
