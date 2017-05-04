@@ -2,6 +2,7 @@ package behaviors;
 
 import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
+import messageservice.Commands;
 import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
@@ -22,7 +23,7 @@ public class ForwardBehavior implements Behavior {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals("forward"))
+				if (msg.command.equals(Commands.FORWARD))
 					message = msg;
 			}
 		});

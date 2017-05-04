@@ -2,6 +2,7 @@ package behaviors;
 
 import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
+import messageservice.Commands;
 import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
@@ -22,7 +23,7 @@ public class RightBehavior implements Behavior {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals("right"))
+				if (msg.command.equals(Commands.RIGHT))
 					message = msg;
 			}
 		});
@@ -45,7 +46,7 @@ public class RightBehavior implements Behavior {
 	@Override
 	public void suppress() {
 		// TODO Auto-generated method stub
-		
+		this.rcc.stop();
 	}
 
 }

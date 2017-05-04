@@ -2,6 +2,7 @@ package behaviors;
 
 import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
+import messageservice.Commands;
 import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
@@ -22,7 +23,7 @@ public class BackwardsBehavior implements Behavior {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals("backward"))
+				if (msg.command.equals(Commands.BACKWARD))
 					message = msg;
 			}
 		});
@@ -43,7 +44,7 @@ public class BackwardsBehavior implements Behavior {
 
 	@Override
 	public void suppress() {
-		// TODO Auto-generated method stub
+		this.rcc.stop();
 		
 	}
 

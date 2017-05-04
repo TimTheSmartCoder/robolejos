@@ -1,6 +1,7 @@
 package client;
 
 import behaviors.BackwardsBehavior;
+import behaviors.CantMoveBehavior;
 import behaviors.ForwardBehavior;
 import behaviors.IdleBehavior;
 import behaviors.LeftBehavior;
@@ -23,7 +24,8 @@ public class client {
 				new RightBehavior(rcc, messageService),
 				new LeftBehavior(rcc, messageService),
 				new BackwardsBehavior(rcc, messageService),
-				new StopBehavior(rcc, messageService) 
+				new StopBehavior(rcc, messageService),
+				new CantMoveBehavior(rcc, messageService)
 		});
 		
 		arbitrator.go();

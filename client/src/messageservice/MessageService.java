@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageService {
 	
-	public class Message {
+	public static class Message {
 		
 		public String command;
 		public Object value;

@@ -2,6 +2,7 @@ package behaviors;
 
 import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
+import messageservice.Commands;
 import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
@@ -22,7 +23,7 @@ public class StopBehavior implements Behavior {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals("stop"))
+				if (msg.command.equals(Commands.STOP))
 					message = msg;
 			}
 		});

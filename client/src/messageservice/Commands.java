@@ -9,6 +9,10 @@ public class Commands {
 	public static final String BACKWARD = "BACKWARD";
 	public static final String HEAD_LEFT = "HEAD_LEFT";
 	public static final String HEAD_RIGHT = "HEAD_RIGHT";
+	public static final String UNABLE_TO_ROTATE_LEFT = "UNABLE_TO_ROTATE_LEFT";
+	public static final String UNABLE_TO_ROTATE_RIGHT = "UNABLE_TO_ROTATE_RIGHT";
+
+	
 			
 	
 
