@@ -99,4 +99,14 @@ private final RangeFinderAdapter rfa;
 		return this.rfa.getRange();
 	}
 
+	public float rotateHead(){
+		int angle = 1;
+		this.smallMotor.rotate(angle);
+		return this.smallMotor.getLimitAngle();
+	}
+	
+	public boolean isHeadMoving(){
+		return this.smallMotor.isMoving();
+	}
+
 }
