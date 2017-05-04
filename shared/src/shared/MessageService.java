@@ -14,6 +14,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessageService {
 	
+	public static class Message {
+		
+		public String command;
+		public Object value;
+		
+		public Message(String command, Object value) {
+			this.command = command;
+			this.value = value;
+		}
+	}
+	
 	public class MessageServiceClient {
 		
 		private final int _port;
@@ -24,7 +35,7 @@ public class MessageService {
 			this._host = host;
 		}
 		
-		public void send(final Object object) {
+		public void send(final Message message) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -32,7 +43,8 @@ public class MessageService {
 					try {
 						Socket socket = new Socket(_host, _port);
 						ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-						objectOutputStream.writeObject(object);
+						objectOutputStream.writeObject(message.command);
+						objectOutputStream.writeObject(message.value);
 						objectOutputStream.flush();
 						socket.close();
 					} catch (IOException e) {
@@ -43,12 +55,14 @@ public class MessageService {
 			}).start();
 		}
 		
-		public void send(List<Object> objects) {
+		public void send(List<Message> messages) {
 			try {
 				Socket socket = this.createSocket();
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-				for(Object object : objects)
-					objectOutputStream.writeObject(object);
+				for(Message message : messages) {
+					objectOutputStream.writeObject(message.command);
+					objectOutputStream.writeObject(message.value);
+				}
 				socket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -77,7 +91,7 @@ public class MessageService {
 		/**
 		 * Queue for containing incoming messages.
 		 */
-		private final BlockingQueue<String> _messageQueue;
+		private final BlockingQueue<Message> _messageQueue;
 		
 		/**
 		 * Constructs an MessageService with the given port.
@@ -85,7 +99,7 @@ public class MessageService {
 		 */
 		public MessageServiceServer(int port) {
 			this._port = port;
-			this._messageQueue = new LinkedBlockingQueue<String>();
+			this._messageQueue = new LinkedBlockingQueue<Message>();
 		}
 		
 		public void initialize() {
@@ -110,11 +124,10 @@ public class MessageService {
 							Socket socket = serverSocket.accept();
 							System.out.println("Connection");
 							ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-							Object object = null;
+							Message message = new Message("", null);
 							try {
 								try {
-									while(!socket.isClosed() && (object = objectInputStream.readObject()) != null) {
-										String message = (String)object;
+									while(!socket.isClosed() && (message.command = (String)objectInputStream.readObject()) != null && (message.value = objectInputStream.readObject()) != null) {
 										_messageQueue.offer(message);
 									}
 								} catch (EOFException e) {
@@ -138,7 +151,7 @@ public class MessageService {
 			this._serverThread.start();
 		}
 		
-		public String getMessage() {
+		public Message getMessage() {
 			try {
 				return this._messageQueue.take();
 			} catch (InterruptedException e) {
@@ -165,7 +178,7 @@ public class MessageService {
 		/**
 		 * Called when a message is received.
 		 */
-		void onMessageReceived(String message);
+		void onMessageReceived(Message message);
 	}
 	
 	private List<IMessageListener> _messageListeners;
@@ -219,16 +232,16 @@ public class MessageService {
 	public void run() {
 		//Check for any messages recevied.
 		while(this._messageServiceServer.isMessageAvailable()) {
-			String message = this._messageServiceServer.getMessage();
+			Message message = this._messageServiceServer.getMessage();
 			if (message != null) this.invokeMessageListeners(message);
 		}
 	}
 	
-	public void send(String message) {
+	public void send(Message message) {
 		this._messageServiceClient.send(message);
 	}
 	
-	public void send(List<String> messages) {
+	public void send(List<Message> messages) {
 		this._messageServiceClient.send(messages);
 	}
 	
@@ -236,7 +249,7 @@ public class MessageService {
 		this._messageListeners.add(listener);
 	}
 	
-	private void invokeMessageListeners(String message) {
+	private void invokeMessageListeners(Message message) {
 		for(IMessageListener listener : this._messageListeners)
 			listener.onMessageReceived(message);
 	}

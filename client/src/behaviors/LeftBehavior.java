@@ -4,12 +4,13 @@ import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
 import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
+import messageservice.MessageService.Message;
 
 public class LeftBehavior implements Behavior {
 	
 	private final RobotControlCenter rcc;
 	private final MessageService messageService;
-	private String message;
+	private Message message;
 	
 	public LeftBehavior(RobotControlCenter rcc, MessageService messageService) {
 		this.rcc = rcc;
@@ -20,8 +21,8 @@ public class LeftBehavior implements Behavior {
 	public void subscribe() {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
-			public void onMessageReceived(String msg) {
-				if (msg.equals("left"))
+			public void onMessageReceived(Message msg) {
+				if (msg.command.equals("left"))
 					message = msg;
 			}
 		});
