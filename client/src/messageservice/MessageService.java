@@ -36,23 +36,20 @@ public class MessageService {
 		}
 		
 		public void send(final Message message) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					try {
-						Socket socket = new Socket(_host, _port);
-						ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-						objectOutputStream.writeObject(message.command);
-						objectOutputStream.writeObject(message.value);
-						objectOutputStream.flush();
-						socket.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}).start();
+			// TODO Auto-generated method stub
+			try {
+				Socket socket = new Socket(_host, _port);
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+				System.out.println("Sending...... " + message.command);
+				objectOutputStream.writeObject(message.command);
+				objectOutputStream.writeObject(message.value);
+				objectOutputStream.flush();
+				socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Failed to send data: " + message.command);
+			}
 		}
 		
 		public void send(List<Message> messages) {
@@ -122,7 +119,7 @@ public class MessageService {
 						serverSocket = new ServerSocket(_port);
 						while(!serverSocket.isClosed()) {
 							Socket socket = serverSocket.accept();
-							System.out.println("Connection");
+							System.out.println("Connection - " + socket.getRemoteSocketAddress());
 							ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 							Message message = new Message("", null);
 							try {

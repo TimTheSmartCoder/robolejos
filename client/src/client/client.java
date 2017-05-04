@@ -17,7 +17,7 @@ public class client {
 
 	public static void main(String[] args) {
 		RobotControlCenter rcc = RobotControlCenter.getInstans();
-		MessageService messageService = new MessageService("localhost", 6801, 6800);
+		MessageService messageService = new MessageService("192.168.1.56", 6801, 6800);
 		messageService.initialize();
 		
 		Arbitrator arbitrator = new Arbitrator(new Behavior[] { 

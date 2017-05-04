@@ -39,6 +39,7 @@ private final RangeFinderAdapter rfa;
 		leftMotor = new EV3LargeRegulatedMotor(brick.getPort(("D")));
 		rightMotor = new EV3LargeRegulatedMotor(brick.getPort(("B")));
 		smallMotor = new EV3MediumRegulatedMotor(brick.getPort(("C")));
+		smallMotor.setSpeed(30);
 		
 		ultraSonic = new EV3UltrasonicSensor(brick.getPort(("S1")));
 		
@@ -100,7 +101,7 @@ private final RangeFinderAdapter rfa;
 	}
 
 	public void rotateHead(int angle){
-		this.smallMotor.rotate(angle);
+		this.smallMotor.rotate(angle, true);
 	}
 	
 	public boolean isHeadMoving(){

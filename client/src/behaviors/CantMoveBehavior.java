@@ -29,13 +29,14 @@ public class CantMoveBehavior implements Behavior {
 			this.state = false;
 		}
 			
-		return distance <= this.MIN_DISTANCE;
+		return distance <= this.MIN_DISTANCE && this.rcc.isMoving();
 	}
 
 	@Override
 	public void action() {
 
 		if(!state){
+			this.rcc.stop();
 			this.state = true;
 			Message message = new Message(Commands.UNABLE_TO_MOVE, this.distance);
 			this.messageService.send(message);

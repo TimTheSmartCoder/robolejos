@@ -12,7 +12,7 @@ public class TurnHeadRightBehavior implements Behavior {
 	private final RobotControlCenter rcc;
 	private final MessageService messageService;
 	private Message message;
-	private int angle = 1;
+	private int angle = 90;
 	private final int MAX_RIGHT_ROTATE = 90;
 	
 	public TurnHeadRightBehavior(RobotControlCenter rcc, MessageService messageService) {
@@ -42,8 +42,10 @@ public class TurnHeadRightBehavior implements Behavior {
 		// TODO Auto-generated method stub
 		if(!this.rcc.isHeadMoving() && this.rcc.getCurentHeadAngle() < MAX_RIGHT_ROTATE){
 			this.rcc.rotateHead(angle);
+			System.out.println("can rotate");
 		}
-		else if(this.rcc.getCurentHeadAngle() == MAX_RIGHT_ROTATE){
+		else if(this.rcc.getCurentHeadAngle() >= MAX_RIGHT_ROTATE){
+			System.out.println("can not rotate");
 			Message errorMessage = new Message(Commands.UNABLE_TO_ROTATE_RIGHT, null);
 			this.messageService.send(errorMessage);
 		}
