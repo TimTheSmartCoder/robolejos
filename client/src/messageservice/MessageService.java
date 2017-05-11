@@ -39,8 +39,8 @@ public class MessageService {
 			// TODO Auto-generated method stub
 			try {
 				Socket socket = new Socket(_host, _port);
+				System.out.println("Sending data (" + message.command + "): " + message.value);
 				ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-				System.out.println("Sending...... " + message.command);
 				objectOutputStream.writeObject(message.command);
 				objectOutputStream.writeObject(message.value);
 				objectOutputStream.flush();
@@ -119,13 +119,13 @@ public class MessageService {
 						serverSocket = new ServerSocket(_port);
 						while(!serverSocket.isClosed()) {
 							Socket socket = serverSocket.accept();
-							System.out.println("Connection - " + socket.getRemoteSocketAddress());
 							ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
 							Message message = new Message("", null);
 							try {
 								try {
 									while(!socket.isClosed() && (message.command = (String)objectInputStream.readObject()) != null) {
 										message.value = objectInputStream.readObject();
+										System.out.println("Received data (" + message.command + "): " + message.value + " : from " + socket.getRemoteSocketAddress());
 										_messageQueue.offer(message);
 									}
 								} catch (EOFException e) {
@@ -151,6 +151,16 @@ public class MessageService {
 		
 		public Message getMessage() {
 			try {
+				{
+					System.out.println("Message queue size: " + this._messageQueue.size());
+					if (this._messageQueue.size() > 2) {
+						System.out.println("Shorting message queue!!!! size is: " + this._messageQueue.size() );
+						Message message = this._messageQueue.take();
+						this._messageQueue.clear();
+						this._messageQueue.put(new Message(Commands.STOP, null));
+						return message;
+					}
+				}
 				return this._messageQueue.take();
 			} catch (InterruptedException e) {
 				return  null;
@@ -228,6 +238,7 @@ public class MessageService {
 	}
 	
 	public void run() {
+		
 		//Check for any messages recevied.
 		while(this._messageServiceServer.isMessageAvailable()) {
 			Message message = this._messageServiceServer.getMessage();
@@ -245,6 +256,10 @@ public class MessageService {
 	
 	public void addMessageListener(IMessageListener listener) {
 		this._messageListeners.add(listener);
+	}
+	
+	public void setClientConnection(String serverHost, int serverPort) {
+		
 	}
 	
 	private void invokeMessageListeners(Message message) {

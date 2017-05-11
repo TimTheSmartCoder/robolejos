@@ -36,8 +36,10 @@ public class ForwardBehavior implements Behavior {
 
 	@Override
 	public void action() {
-		if (!this.rcc.isMoving())
+		if (!this.rcc.isMoving()) {
 			this.rcc.forward();
+			System.out.println("Driving forward");
+		}
 		message = null;
 	}
 

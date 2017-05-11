@@ -39,13 +39,12 @@ public class TurnHeadRightBehavior implements Behavior {
 
 	@Override
 	public void action() {
+		System.out.println("Right angle: " + this.rcc.getCurentHeadAngle());
 		// TODO Auto-generated method stub
 		if(!this.rcc.isHeadMoving() && this.rcc.getCurentHeadAngle() < MAX_RIGHT_ROTATE){
 			this.rcc.rotateHead(angle);
-			System.out.println("can rotate");
 		}
 		else if(this.rcc.getCurentHeadAngle() >= MAX_RIGHT_ROTATE){
-			System.out.println("can not rotate");
 			Message errorMessage = new Message(Commands.UNABLE_TO_ROTATE_RIGHT, null);
 			this.messageService.send(errorMessage);
 		}

@@ -7,28 +7,28 @@ import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
 
-public class StopBehavior implements Behavior {
-
-	private final RobotControlCenter rcc;
-	private final MessageService messageService;
+public class SpeedBehavior implements Behavior {
+	
+	private RobotControlCenter rcc;
+	private MessageService messageService;
 	private Message message;
 	
-	public StopBehavior(RobotControlCenter rcc, MessageService messageService) {
-		this.rcc = rcc;
+	public SpeedBehavior(RobotControlCenter rcc, MessageService messageService) {
 		this.messageService = messageService;
-		this.subscribe();
+		this.rcc = rcc;
+		this.Subscribe();
 	}
 	
-	public void subscribe() {
+	public void Subscribe(){
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals(Commands.STOP))
+				if (msg.command.equals(Commands.SET_SPEED))
 					message = msg;
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean takeControl() {
 		// TODO Auto-generated method stub
@@ -37,16 +37,14 @@ public class StopBehavior implements Behavior {
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
-		System.out.println("Stopped the robot");
-		this.rcc.stop();
-		message = null;
+		float speedIncrease = (float) message.value;
+		this.rcc.setCurrentSpeed(speedIncrease);
 	}
 
 	@Override
 	public void suppress() {
 		// TODO Auto-generated method stub
-		this.rcc.stop();
+		
 	}
-	
+
 }
