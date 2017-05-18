@@ -15,6 +15,7 @@ public class IdleBehavior implements Behavior{
 	private final MessageService messageService;
 	private final RobotControlCenter rcc;
 	private long lastUpdate = 0;
+	private long lastGCRequest = 0;
 	
 	public IdleBehavior(RobotControlCenter rcc, MessageService messageService) {
 		this.messageService = messageService;
@@ -39,6 +40,14 @@ public class IdleBehavior implements Behavior{
 			data.add((float) rcc.getDistance());
 			messageService.send(new Message(Commands.DATA, data));
 			lastUpdate = update;
+		}
+		
+		long gcRequest = System.currentTimeMillis() / 5000l;
+		
+		if (gcRequest - lastGCRequest >= 1) {
+			System.out.println("GC Request send to JVM.");
+			System.gc();
+			lastGCRequest = gcRequest;
 		}
 		
 		this.messageService.run();

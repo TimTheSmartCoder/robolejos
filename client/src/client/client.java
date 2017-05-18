@@ -6,6 +6,7 @@ import behaviors.ForwardBehavior;
 import behaviors.IdleBehavior;
 import behaviors.LeftBehavior;
 import behaviors.RightBehavior;
+import behaviors.ScanBehavior;
 import behaviors.SoundBehavior;
 import behaviors.StopBehavior;
 import behaviors.StopHeadBehavior;
@@ -38,7 +39,8 @@ public class client {
 				new BackwardsBehavior(rcc, messageService),
 				new CantMoveBehavior(rcc, messageService),
 				new TurnHeadLeftBehavior(rcc, messageService),
-				new TurnHeadRightBehavior(rcc, messageService)
+				new TurnHeadRightBehavior(rcc, messageService),
+				new ScanBehavior(rcc, messageService)
 		});
 		
 		try {

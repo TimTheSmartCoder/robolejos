@@ -16,4 +16,5 @@ public class Commands {
 	public static final String DATA = "DATA";
 	public static final String SET_SPEED = "SET_SPEED";
 	public static final String SOUND = "SOUND";
-}
+	public static final String SCAN = "SCAN";
+}	

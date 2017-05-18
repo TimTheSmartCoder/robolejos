@@ -41,7 +41,7 @@ public class TurnHeadLeftBehavior implements Behavior {
 	public void action() {
 		// TODO Auto-generated method stub
 		if(!this.rcc.isHeadMoving() && this.rcc.getCurentHeadAngle() > MAX_LEFT_ROTATE){
-			this.rcc.rotateHead(angle);
+			this.rcc.rotateHead(angle, true);
 		}
 		else if(this.rcc.getCurentHeadAngle() <= MAX_LEFT_ROTATE){
 			Message errorMessage = new Message(Commands.UNABLE_TO_ROTATE_LEFT, null);

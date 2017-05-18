@@ -106,8 +106,8 @@ private final RangeFinderAdapter rfa;
 		return this.rfa.getRange();
 	}
 
-	public void rotateHead(int angle){
-		this.smallMotor.rotate(angle, true);
+	public void rotateHead(int angle, boolean immediateReturn){
+		this.smallMotor.rotate(angle, immediateReturn);
 	}
 	
 	public boolean isHeadMoving(){

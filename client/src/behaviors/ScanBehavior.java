@@ -1,5 +1,8 @@
 package behaviors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import client.RobotControlCenter;
 import lejos.robotics.subsumption.Behavior;
 import messageservice.Commands;
@@ -7,15 +10,17 @@ import messageservice.MessageService;
 import messageservice.MessageService.IMessageListener;
 import messageservice.MessageService.Message;
 
-public class TurnHeadRightBehavior implements Behavior {
+public class ScanBehavior implements Behavior {
 	
 	private final RobotControlCenter rcc;
 	private final MessageService messageService;
 	private Message message;
-	private int angle = 90;
-	private final int MAX_RIGHT_ROTATE = 90;
 	
-	public TurnHeadRightBehavior(RobotControlCenter rcc, MessageService messageService) {
+	private int headTurn = 10;
+	private int headSteps = 180/headTurn;
+	private List<Float> data = new ArrayList<>();
+	
+	public ScanBehavior(RobotControlCenter rcc, MessageService messageService) {
 		this.rcc = rcc;
 		this.messageService = messageService;
 		this.subscribe();
@@ -25,37 +30,38 @@ public class TurnHeadRightBehavior implements Behavior {
 		messageService.addMessageListener(new IMessageListener() {
 			@Override
 			public void onMessageReceived(Message msg) {
-				if (msg.command.equals(Commands.HEAD_RIGHT))
+				if (msg.command.equals(Commands.SCAN))
 					message = msg;
 			}
 		});
 	}
+	
 
 	@Override
 	public boolean takeControl() {
-		// TODO Auto-generated method stub
+		
 		return message != null;
 	}
 
 	@Override
 	public void action() {
-		System.out.println("Right angle: " + this.rcc.getCurentHeadAngle());
-		// TODO Auto-generated method stub
-		if(!this.rcc.isHeadMoving() && this.rcc.getCurentHeadAngle() < MAX_RIGHT_ROTATE){
-			this.rcc.rotateHead(angle, true);
+		this.data.clear();
+		int current = this.rcc.getCurentHeadAngle();
+		int turn = -90-current;
+		this.rcc.rotateHead(turn, false);
+		for(int i = 0; i < this.headSteps; i ++){
+			this.data.add(rcc.getDistance());
+			this.rcc.rotateHead(headTurn, false);
 		}
-		else if(this.rcc.getCurentHeadAngle() >= MAX_RIGHT_ROTATE){
-			Message errorMessage = new Message(Commands.UNABLE_TO_ROTATE_RIGHT, null);
-			this.messageService.send(errorMessage);
-		}
-		message = null;	
+		this.messageService.send(new Message(Commands.SCAN, data));
+		this.rcc.rotateHead(-90, false);
+		this.message = null;	
 	}
 
 	@Override
 	public void suppress() {
 		// TODO Auto-generated method stub
-		this.rcc.stopHead();
+		
 	}
-	
 
 }
